@@ -1923,6 +1923,14 @@ class TelegramWorkflowService:
             context_lines.append(f"Preferred artist: {escape(intake.preferred_artist)}")
         if intake.tattoo_project_type:
             context_lines.append(f"Project type: {escape(intake.tattoo_project_type)}")
+        if intake.placement:
+            context_lines.append(f"Placement: {escape(intake.placement)}")
+        if intake.size_estimate_cm:
+            context_lines.append(f"Size: {escape(intake.size_estimate_cm)}")
+        if intake.color_preference:
+            context_lines.append(f"Color: {escape(intake.color_preference)}")
+        if intake.style_tags:
+            context_lines.append(f"Style: {escape(', '.join(intake.style_tags))}")
         context_section = f"{chr(10).join(context_lines)}\n" if context_lines else ""
 
         draft_section = ""
