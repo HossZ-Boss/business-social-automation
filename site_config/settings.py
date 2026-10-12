@@ -224,7 +224,7 @@ OUTLOOK_SUBSCRIPTION_RENEWAL_LIMIT = int(os.getenv("OUTLOOK_SUBSCRIPTION_RENEWAL
 
 # Temporary safety gate for client testing. While True, Outlook emails are processed
 # only when the subject contains the word "test". Set to False before production launch.
-OUTLOOK_REQUIRE_TEST_SUBJECT = False
+OUTLOOK_REQUIRE_TEST_SUBJECT = True
 OUTLOOK_TEST_SUBJECT_KEYWORD = "test"
 CELERY_BEAT_SCHEDULE = {}
 if env_bool("ENABLE_PENDING_HOLD_REVIEW_BEAT", True):
