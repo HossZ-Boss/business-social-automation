@@ -1190,6 +1190,7 @@ class TelegramWorkflowService:
             confirmation = f"{confirmation}\nNote: {escape(note)}"
         chat_id = message.get("chat", {}).get("id")
         self._refresh_latest_review_card(intake, f"Status: Price updated by {actor.name}.")
+        self._refresh_latest_artist_assignment_card(intake)
         self.telegram.send_message(chat_id=chat_id, text=confirmation)
         return {"ok": True, "action": "price_updated", "intake_id": intake.pk}
     def _hold_intake(
@@ -1757,6 +1758,37 @@ class TelegramWorkflowService:
                 message_id=link.telegram_message_id,
                 status_text=status_text,
             )
+
+    def _refresh_latest_artist_assignment_card(self, intake: IntakeRequest) -> None:
+        if not intake.assigned_artist_id:
+            return
+
+        link = TelegramMessageLink.objects.filter(
+            intake=intake,
+            artist_id=intake.assigned_artist_id,
+            purpose=TelegramMessagePurpose.ARTIST_ASSIGNMENT,
+            is_active=True,
+        ).order_by("-created_at").first()
+        if not link:
+            return
+
+        text = self._format_artist_update_text(
+            intake,
+            "You have been assigned to this request.",
+            [],
+            include_summary=True,
+        )
+        try:
+            response = self.telegram.edit_message_text(
+                chat_id=link.telegram_chat_id,
+                message_id=link.telegram_message_id,
+                text=text,
+            )
+            link.raw_message = response.get("result", link.raw_message)
+            link.save(update_fields=["raw_message"])
+        except Exception:
+            logger.exception("Could not refresh Telegram artist assignment card for intake=%s", intake.pk)
+
     def _refresh_review_card(
         self,
         intake: IntakeRequest,

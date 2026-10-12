@@ -1,5 +1,5 @@
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from django.test import SimpleTestCase
 
@@ -45,3 +45,43 @@ class TelegramReviewCardTests(SimpleTestCase):
         self.assertIn("Size: 8 cm", text)
         self.assertIn("Color: black and grey", text)
         self.assertIn("Style: fine line, floral", text)
+
+    def test_price_refresh_edits_current_artist_assignment_card(self):
+        intake = SimpleNamespace(pk=12, assigned_artist_id=7)
+        link = SimpleNamespace(
+            telegram_chat_id=100,
+            telegram_message_id=200,
+            raw_message={"text": "old card"},
+            save=Mock(),
+        )
+        links = Mock()
+        links.order_by.return_value.first.return_value = link
+        service = TelegramWorkflowService()
+        service.telegram = Mock()
+        service.telegram.edit_message_text.return_value = {"result": {"text": "updated card"}}
+
+        with (
+            patch("intake.telegram_workflow.TelegramMessageLink.objects.filter", return_value=links) as filter_links,
+            patch.object(service, "_format_artist_update_text", return_value="updated card") as format_text,
+        ):
+            service._refresh_latest_artist_assignment_card(intake)
+
+        filter_links.assert_called_once_with(
+            intake=intake,
+            artist_id=7,
+            purpose="artist_assignment",
+            is_active=True,
+        )
+        format_text.assert_called_once_with(
+            intake,
+            "You have been assigned to this request.",
+            [],
+            include_summary=True,
+        )
+        service.telegram.edit_message_text.assert_called_once_with(
+            chat_id=100,
+            message_id=200,
+            text="updated card",
+        )
+        self.assertEqual(link.raw_message, {"text": "updated card"})
+        link.save.assert_called_once_with(update_fields=["raw_message"])
