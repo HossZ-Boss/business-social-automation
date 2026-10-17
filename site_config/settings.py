@@ -27,6 +27,7 @@ USE_X_FORWARDED_HOST = True
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +44,72 @@ INSTALLED_APPS = [
     'account', 'core.apps.CoreConfig', 'lead', 'intake', 'vcita.apps.VcitaConfig',
     'google_calendar.apps.GoogleCalendarConfig',
 ]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Tattoo Hysteria Admin",
+    "site_header": "Tattoo Hysteria",
+    "site_brand": "Tattoo Hysteria",
+    "welcome_sign": "Welcome to Tattoo Hysteria Admin",
+    "copyright": "Tattoo Hysteria Amsterdam",
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "show_ui_builder": False,
+    "topmenu_links": [
+        {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"app": "intake"},
+        {"app": "vcita"},
+    ],
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "account": "fas fa-user-shield",
+        "core": "fas fa-network-wired",
+        "core.WhatsAppAccount": "fab fa-whatsapp",
+        "core.OutlookAccount": "fas fa-envelope",
+        "core.WebhookLog": "fas fa-clipboard-list",
+        "core.WebhookSubscription": "fas fa-link",
+        "lead": "fas fa-address-book",
+        "lead.Lead": "fas fa-user-tag",
+        "lead.Conversation": "fas fa-comments",
+        "lead.Message": "fas fa-comment-dots",
+        "intake": "fas fa-clipboard-check",
+        "intake.IntakeRequest": "fas fa-file-signature",
+        "intake.AIAnalysis": "fas fa-brain",
+        "intake.ArtistProfile": "fas fa-palette",
+        "intake.HumanDecision": "fas fa-user-check",
+        "vcita": "fas fa-calendar-check",
+        "vcita.VcitaAccount": "fas fa-briefcase",
+        "vcita.VcitaService": "fas fa-calendar-plus",
+        "vcita.VcitaWebhookEvent": "fas fa-bell",
+        "google_calendar": "fas fa-calendar-alt",
+    },
+    "order_with_respect_to": [
+        "intake",
+        "lead",
+        "vcita",
+        "core",
+        "google_calendar",
+        "account",
+        "auth",
+    ],
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",
+    "navbar": "navbar-dark",
+    "sidebar": "sidebar-dark-info",
+    "accent": "accent-info",
+    "button_classes": {
+        "primary": "btn-info",
+        "secondary": "btn-outline-secondary",
+        "success": "btn-success",
+        "danger": "btn-danger",
+        "warning": "btn-warning",
+        "info": "btn-info",
+    },
+    "actions_sticky_top": True,
+}
 
 if env_bool("USE_S3", False):
     INSTALLED_APPS.append("storages")

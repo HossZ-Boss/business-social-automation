@@ -181,6 +181,7 @@ Models:
 - Current intake state stores AI summary, AI suggested price, Hoss-approved price, price note, approver, approval timestamp, AI-proposed appointment date/time, pending hold service/date/time/expiry/review state, chosen vCita service snapshot, schedule state, vCita Matter UID, vCita booking UID, and payment state.
 - `AIAnalysis.request_payload` stores the exact `/analyze` request payload for Admin-panel debugging. Use it to confirm `new_image_urls`, `existing_db_state.intake.previous_image_urls`, and `message_source`. Do not feed this field back into AI state.
 - Admin panel for `IntakeRequest` is organized for local testing: summary, draft reply, AI suggested price, approved price, price note, appointment date, and appointment time can be edited directly before sending a Telegram review card.
+- Admin panel theming uses `django-jazzmin`. Keep `jazzmin` before `django.contrib.admin` in `INSTALLED_APPS`; update `JAZZMIN_SETTINGS` and `JAZZMIN_UI_TWEAKS` in `site_config/settings.py` for branding, menu order, icons, and theme tweaks.
 
 Service:
 

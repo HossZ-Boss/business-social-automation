@@ -309,6 +309,7 @@ Service notes notification update:
 
 
 Outlook subscription update fix:
+- The Django Admin panel uses `django-jazzmin` for the admin theme. `jazzmin` must stay before `django.contrib.admin` in `INSTALLED_APPS`, and admin UI branding/icons live in `site_config/settings.py` under `JAZZMIN_SETTINGS` and `JAZZMIN_UI_TWEAKS`.
 - Outlook subscriptions are automatically renewed by Celery Beat task `core.renew_outlook_subscriptions`; it checks expiring/failed/pending active Outlook subscriptions and renews or recreates them before Microsoft Graph expiry.
 
 - `WebhookSubscription` updates now compare against the pre-save row, so Admin panel changes renew or recreate the Microsoft Graph webhook correctly.
