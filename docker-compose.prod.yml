@@ -76,7 +76,7 @@ services:
       - tattoo_hysteria_net
     restart: unless-stopped
   nginx:
-    image: nginx:1.27-alpine
+    image: nginx:1.30.6-alpine
     container_name: tattoo_hysteria_nginx
     depends_on:
       - backend
